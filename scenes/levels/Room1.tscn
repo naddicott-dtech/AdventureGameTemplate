@@ -1,9 +1,7 @@
-[gd_scene load_steps=10 format=3]
+[gd_scene load_steps=8 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/entities/Player.tscn" id="1_ht22e"]
-[ext_resource type="Script" path="res://scenes/entities/Player.gd" id="2_5bhfs"]
 [ext_resource type="PackedScene" path="res://scenes/entities/Interactable.tscn" id="3_v3xuu"]
-[ext_resource type="Script" path="res://scenes/entities/Interactable.gd" id="4_j8heh"]
 [ext_resource type="PackedScene" path="res://scenes/entities/NPC.tscn" id="5_5bhfs"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_0vb4a"]
@@ -76,35 +74,30 @@ shape = SubResource("RectangleShape2D_xoa1y")
 
 [node name="Entities" type="Node2D" parent="."]
 
-[node name="Player" type="CharacterBody2D" parent="Entities" instance=ExtResource("1_ht22e")]
+[node name="Player" parent="Entities" instance=ExtResource("1_ht22e")]
 position = Vector2(150, 380)
-script = ExtResource("2_5bhfs")
 
-[node name="Sign" type="Node2D" parent="Entities" instance=ExtResource("3_v3xuu")]
+[node name="Sign" parent="Entities" instance=ExtResource("3_v3xuu")]
 position = Vector2(320, 280)
-script = ExtResource("4_j8heh")
 display_name = "sign"
 message = "Find the brass key. Turn on power. The door needs both."
 
-[node name="Key" type="Node2D" parent="Entities" instance=ExtResource("3_v3xuu")]
+[node name="Key" parent="Entities" instance=ExtResource("3_v3xuu")]
 position = Vector2(520, 420)
-script = ExtResource("4_j8heh")
 display_name = "key"
 behavior = 1
 message = "You picked up the brass key."
 item_id = "brass_key"
 
-[node name="Switch" type="Node2D" parent="Entities" instance=ExtResource("3_v3xuu")]
+[node name="Switch" parent="Entities" instance=ExtResource("3_v3xuu")]
 position = Vector2(780, 280)
-script = ExtResource("4_j8heh")
 display_name = "switch"
 behavior = 2
 message = "Power is on."
 flag_id = "power"
 
-[node name="Door" type="Node2D" parent="Entities" instance=ExtResource("3_v3xuu")]
+[node name="Door" parent="Entities" instance=ExtResource("3_v3xuu")]
 position = Vector2(1090, 420)
-script = ExtResource("4_j8heh")
 display_name = "door"
 behavior = 3
 message = "Welcome to room two. Try returning: your progress stays."
@@ -113,24 +106,17 @@ required_flag = "power"
 locked_message = "This door needs the brass key AND power."
 destination_room = "res://scenes/levels/Room2.tscn"
 
-[node name="Guide" type="Node2D" parent="Entities" instance=ExtResource("5_5bhfs")]
+[node name="Guide" parent="Entities" instance=ExtResource("5_5bhfs")]
 position = Vector2(320, 480)
-script = ExtResource("4_j8heh")
-display_name = "guide"
-behavior = 6
-story_file = "res://stories/guide.json"
-completion_flag = "met_guide"
 
-[node name="Helper" type="Node2D" parent="Entities" instance=ExtResource("5_5bhfs")]
+[node name="Helper" parent="Entities" instance=ExtResource("5_5bhfs")]
 position = Vector2(780, 480)
-script = ExtResource("4_j8heh")
 display_name = "helper"
-behavior = 6
 story_file = "res://stories/helper.json"
+completion_flag = ""
 
-[node name="FavorDoor" type="Node2D" parent="Entities" instance=ExtResource("3_v3xuu")]
+[node name="FavorDoor" parent="Entities" instance=ExtResource("3_v3xuu")]
 position = Vector2(1090, 250)
-script = ExtResource("4_j8heh")
 display_name = "favor door"
 behavior = 3
 message = "Your help unlocked another way through!"
