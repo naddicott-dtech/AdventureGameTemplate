@@ -46,3 +46,13 @@ switch, set a different flag_id, match required_flag. New room: duplicate room,
 move Spawn, choose file on Door. New art: set Picture; size with Sprite2D scale.
 Custom action: copied script, custom_interaction(); standard flow still handles
 requirements, message, once_only, HUD update. Tests live outside student repo.
+
+## Choice outcomes
+
+Ink response tags `# flag: helped_npc` stage unique flag IDs. Return after a
+normal ending commits them to Globals.flags; cancel/error discards pending flags.
+IDs must be valid identifiers; malformed flag tags show cancellable errors.
+Door Required Flag matches the ID. Keep Completion Flag blank for choice-only
+rewards; that Inspector field still grants on ALL completed branches. Tags never
+clear existing flags; manual saves already persist them. Helper + FavorDoor in
+Room1 demonstrate help/refuse using stories/helper.ink (exported helper.json).

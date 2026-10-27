@@ -4,6 +4,8 @@ extends Control
 @export var world_root: Node
 var at_end := false
 var failed := false
+# Choice tags collect here; only Return commits them to the adventure.
+var pending_flags: Array[String] = []
 var story: InkStory
 var npc: Node
 var previous_process_mode: Node.ProcessMode
@@ -22,6 +24,7 @@ func open(character: Node) -> void:
 	npc = character
 	at_end = false
 	failed = false
+	pending_flags.clear()
 	Globals.in_conversation = true
 	previous_process_mode = world_root.process_mode
 	world_root.process_mode = Node.PROCESS_MODE_DISABLED
@@ -51,12 +54,8 @@ func advance() -> void:
 		var text := story.continue_story()
 		if failed:
 			return
-		# Stage/cutscene commands belong to the full Narrative player. Refuse
-		# them here rather than silently promising an effect that never happens.
-		for tag in story.current_tags:
-			if str(tag).strip_edges().begins_with("@"):
-				_show_error("This NPC player supports text and choices, not Narrative @ cues. Remove: " + str(tag))
-				return
+		if not _read_tags(story.current_tags):
+			return
 		$Panel/Rows/Text.text = text.strip_edges()
 	_show_choices_or_end()
 
@@ -82,7 +81,30 @@ func _show_choices_or_end() -> void:
 	$Panel/Rows/Next.disabled = not story.current_choices.is_empty()
 	$Panel/Rows/Next.text = "Return to room" if at_end else "Next"
 
+func _read_tags(tags: Array) -> bool:
+	# Inky: Thanks for helping! # flag: helped_npc
+	# IDs use letters, digits and underscores, matching Required Flag exactly.
+	for raw_tag in tags:
+		var tag := str(raw_tag).strip_edges()
+		if tag.begins_with("flag:"):
+			var flag := tag.trim_prefix("flag:").strip_edges()
+			if not flag.is_valid_identifier():
+				_show_error("Invalid flag tag: " + tag + ". Use flag: helped_npc (letters, digits, underscores; no spaces).")
+				return false
+			if flag not in pending_flags:
+				pending_flags.append(flag)
+		elif tag.begins_with("flag"):
+			_show_error("Malformed flag tag: " + tag + ". Use flag: helped_npc.")
+			return false
+		elif tag.begins_with("@"):
+			_show_error("This NPC player supports text, choices and flag: tags, not Narrative @ cues. Remove: " + tag)
+			return false
+	return true
+
 func _finish() -> void:
+	for flag in pending_flags:
+		if flag not in Globals.flags:
+			Globals.flags.append(flag)
 	# Completion is explicit and Inspector-driven. Cancelling grants nothing.
 	if npc.completion_flag != "" and npc.completion_flag not in Globals.flags:
 		Globals.flags.append(npc.completion_flag)
@@ -99,6 +121,7 @@ func _close() -> void:
 	_clear_choices()
 	hide()
 	story = null
+	pending_flags.clear()
 	npc = null
 	world_root.process_mode = previous_process_mode
 	Globals.in_conversation = false
@@ -108,7 +131,7 @@ func _close() -> void:
 func _show_error(message: String) -> void:
 	failed = true
 	_clear_choices()
-	$Panel/Rows/Text.text = message + "\nCancel to return to the room and fix the NPC's Story File."
+	$Panel/Rows/Text.text = message + "\nCancel to return to the room and fix the story in Inky, re-export its JSON, and check the NPC's Story File."
 	$Panel/Rows/Next.disabled = true
 
 func _clear_choices() -> void:

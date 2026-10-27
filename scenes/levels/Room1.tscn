@@ -121,5 +121,22 @@ behavior = 6
 story_file = "res://stories/guide.json"
 completion_flag = "met_guide"
 
+[node name="Helper" type="Node2D" parent="Entities" instance=ExtResource("5_5bhfs")]
+position = Vector2(780, 480)
+script = ExtResource("4_j8heh")
+display_name = "helper"
+behavior = 6
+story_file = "res://stories/helper.json"
+
+[node name="FavorDoor" type="Node2D" parent="Entities" instance=ExtResource("3_v3xuu")]
+position = Vector2(1090, 250)
+script = ExtResource("4_j8heh")
+display_name = "favor door"
+behavior = 3
+message = "Your help unlocked another way through!"
+required_flag = "helped_npc"
+locked_message = "Help the helper to unlock this door. Refusing won't unlock it."
+destination_room = "res://scenes/levels/Room2.tscn"
+
 [node name="Spawn" type="Marker2D" parent="."]
 position = Vector2(150, 380)

@@ -106,8 +106,43 @@ Use plain Ink text, choices, variables, and branches. The NPC's Inspector
 supplies the displayed name and portrait. The full Narrative template's `@speaker`,
 `@scene`, music, and other stage cues are not supported here; the player reports
 those tags rather than ignoring them. Ink variables are local to each conversation;
-they do not automatically read or change your adventure items/flags. Completion
-Flag is the small, explicit connection for this slice.
+they do not automatically read or change your adventure items/flags. Use `flag:` tags for choice-specific outcomes, or Completion Flag for every completed conversation.
+
+### Let a choice unlock a door
+
+Put a **flag tag on the response line inside that branch** in Inky:
+
+```ink
+Will you help me?
+* [Yes, I'll help.]
+    Thank you! # flag: helped_npc
+    -> END
+* [No, sorry.]
+    Maybe another time.
+    -> END
+```
+
+Export to JSON again and set it as the NPC's **Story File**. On the door,
+set **Required Flag** to `helped_npc`. Leave the NPC's **Completion Flag blank**
+if only one choice should unlock the door; Completion Flag applies to every
+finished branch, including refusal.
+
+Tags collect as their lines are reached. They take effect when you click
+**Return to room** after the ending. Cancel/Escape or a story error discards
+this conversation's pending tags. Flags already earned in earlier conversations
+stay set: refusing later does not take back an earlier reward. Save after
+returning to keep flags across launches.
+
+Use matching, case-sensitive IDs such as `helped_npc` or `warned_guard`:
+start with a letter or underscore, then use letters, digits, and underscores.
+No spaces. Different branches can set different flags. To set two, use
+`# flag: helped_npc # flag: found_clue`. Repeated tags don't duplicate flags.
+Put tags on response lines, not choice labels or a shared introductory line.
+
+**Try the included example:** talk to **helper** in Room1. Help opens the
+**favor door**; refuse keeps it locked. Restart between testing the two outcomes.
+`stories/helper.ink` is the editable source. The original key-and-switch door
+still works independently.
 
 Restyle `scenes/narrative/Conversation.tscn` to change the shared panel.
 The pinned Ink runtime and story loader come from the Narrative template;
