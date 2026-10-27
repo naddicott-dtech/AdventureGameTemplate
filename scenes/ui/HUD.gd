@@ -15,5 +15,7 @@ func _show_message(text: String) -> void:
 	$Message.text = text
 
 func _refresh() -> void:
+	for button in [$Save, $Load, $Restart]:
+		button.disabled = Globals.in_conversation
 	$Inventory.text = "Items: " + (", ".join(Globals.items) if not Globals.items.is_empty() else "none")
 	$Status.text = "COMPLETE — Restart to play again" if Globals.finished else "WASD / arrows: walk    E: interact"

@@ -1,7 +1,9 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://scenes/managers/RoomManager.gd" id="1_rvslj"]
 [ext_resource type="Script" path="res://scenes/ui/HUD.gd" id="2_0bbpv"]
+[ext_resource type="PackedScene" path="res://scenes/narrative/Conversation.tscn" id="3_rarhs"]
+[ext_resource type="Script" path="res://scenes/narrative/Conversation.gd" id="4_vcsgt"]
 
 [node name="Main" type="Node"]
 
@@ -79,3 +81,11 @@ offset_top = 60.0
 offset_right = 1205.0
 offset_bottom = 100.0
 text = "Restart"
+
+[node name="Conversation" type="Control" parent="UI" node_paths=PackedStringArray("world_root") instance=ExtResource("3_rarhs")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("4_vcsgt")
+world_root = NodePath("../../WorldRoot")

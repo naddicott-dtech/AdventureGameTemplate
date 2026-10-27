@@ -10,6 +10,9 @@ Scene tree and folders follow Narrative's Main/Managers/WorldRoot/UI layout.
   picture (Texture2D), required_item/required_flag (String IDs), locked_message,
   item_id/flag_id (String IDs), once_only (bool), destination_room (scene path).
 - RoomManager: starting_room (scene path), world_root (prewired Node).
+- NPC (Interactable behavior CONVERSATION): story_file (compiled Ink JSON),
+  conversation_portrait (Texture2D), completion_flag (String ID).
+- Conversation: world_root (prewired Node).
 - HUD: mission (multiline String), room_manager (prewired Node).
 - Room Spawn: editor position. Walls: art polygon + collision rectangle.
 
@@ -28,7 +31,13 @@ RoomManager swap. SignalBus.message → HUD; state_changed → inventory/status.
 Globals: items, flags, used_objects, finished. Items/flags are unique strings.
 Used IDs = room scene path + object node path. Preserve names for old saves.
 RoomManager owns manual JSON save/load (room, position, those four state fields).
-No generalized stats framework. No automatic Ink integration.
+No generalized stats framework. NPC integration reuses NarrativeStoryLoader + pinned inkgd. Main/UI/Conversation
+receives conversation_requested(npc), disables WorldRoot processing, renders
+Ink text/choices, then restores the SAME live room. Globals.in_conversation is
+transient and blocks Player/interactions/room changes/save/load/restart.
+Completion flag + Once Only apply on Return after normal end, never Cancel/error.
+Each visit creates a fresh Ink story. No mid-dialogue saves, stage @ cues, or
+automatic sharing of Ink variables with adventure state.
 
 ## Common tweaks
 

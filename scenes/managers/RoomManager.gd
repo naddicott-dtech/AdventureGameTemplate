@@ -12,6 +12,8 @@ func _request_room(path: String) -> void:
 	change_room.call_deferred(path)
 
 func change_room(path: String) -> bool:
+	if Globals.in_conversation:
+		return false
 	var scene = load(path)
 	if not scene is PackedScene:
 		SignalBus.message.emit("Cannot open room: " + path)
@@ -31,11 +33,15 @@ func change_room(path: String) -> bool:
 	return true
 
 func restart() -> void:
+	if Globals.in_conversation:
+		return
 	Globals.reset()
 	change_room(starting_room)
 	SignalBus.message.emit("Fresh start. Find the key and turn on the switch.")
 
 func save_game(path := "user://adventure_save.json") -> void:
+	if Globals.in_conversation:
+		return
 	var player = world_root.get_child(0).get_node("Entities/Player")
 	var data := {"room": current_room, "position": [player.position.x, player.position.y], "items": Globals.items, "flags": Globals.flags, "used": Globals.used_objects, "finished": Globals.finished}
 	var file := FileAccess.open(path, FileAccess.WRITE)
@@ -46,6 +52,8 @@ func save_game(path := "user://adventure_save.json") -> void:
 	SignalBus.message.emit("Saved. Load returns to this spot.")
 
 func load_game(path := "user://adventure_save.json") -> void:
+	if Globals.in_conversation:
+		return
 	if not FileAccess.file_exists(path):
 		SignalBus.message.emit("No save yet. Press Save first.")
 		return

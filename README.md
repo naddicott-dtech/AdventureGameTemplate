@@ -12,7 +12,7 @@ with its HUD, room changes, and save buttons. Use F5 for the example walkthrough
 
 WASD or arrow keys move. Walk near an object; its **E** prompt appears.
 Press E to interact. Read the sign, collect the key, turn on the switch, and
-use the door. Room two has a return door and an exit. Save, Load, and Restart
+use the door. Walk up to the guide and press E for an Ink conversation. Room two has a return door and an exit. Save, Load, and Restart
 are at the top. Restart starts fresh but keeps your last manual save.
 
 ## Your mission — no code needed
@@ -47,6 +47,7 @@ Use **F5**, not a loose Interactable scene, for meaningful interaction tests.
 | Door | Destination Room, Message | Opens another room |
 | Finish | Message | Stops movement/interactions and shows your ending |
 | Custom | The marked function in the script | Runs your new interaction logic |
+| Conversation | Story File, optional Conversation Portrait / Completion Flag | Plays an Ink conversation and returns to this room |
 
 Every behavior can require an item, a flag, or both. Blank requirements mean
 none. **Locked Message** explains what's missing. Keys are never consumed.
@@ -61,7 +62,8 @@ Main
 │   └── RoomManager       loads rooms; saves/loads progress
 ├── WorldRoot             holds one room at a time
 └── UI
-    └── HUD               mission, message, items, buttons
+    ├── HUD               mission, message, items, buttons
+    └── Conversation      Ink text and choices over the room
 
 Room1 (or your room)
 ├── Floor / RoomLabel
@@ -76,6 +78,41 @@ The folders match those jobs: `scenes/entities`, `scenes/levels`,
 `scenes/managers`, `scenes/ui`, `autoload`, and `assets`.
 `Globals` holds items, flags, and used objects. `SignalBus` is a bulletin board:
 objects post messages or request a room; the HUD and RoomManager listen.
+
+## Add an NPC conversation — no GDScript needed
+
+1. Drag `scenes/entities/NPC.tscn` into your room's **Entities**, or duplicate
+   **Guide**. Move the NPC where you want them to stand.
+2. Set **Display Name** and **Picture** (the character's art in the room).
+3. Write your conversation in **Inky**. Open `stories/guide.ink` for an example.
+   Export to JSON into `stories/` after each edit.
+4. Select the NPC and set **Story File** to that exported `.json`.
+5. Optionally set **Conversation Portrait** for the picture in the dialogue
+   panel. Leave it empty for text only.
+6. Optionally set **Completion Flag**, such as `met_scientist`. An ordinary
+   door can use that same ID as its **Required Flag**.
+7. Press F5, walk close, and press E. Click Next and the choice buttons.
+   The final line stays until you click **Return to room**.
+
+The room stays alive behind the conversation. Position, collected items, and
+switches stay exactly where you left them. Movement and Save/Load/Restart are
+blocked while talking. **Cancel** or **Escape** returns without granting the
+completion flag. **Once Only** hides the NPC after a completed conversation,
+not after cancellation. Leave it off for repeat conversations; every visit
+starts the Ink story from the beginning. Save after returning to preserve a
+completion flag and once-only NPC across launches. There are no mid-dialogue saves.
+
+Use plain Ink text, choices, variables, and branches. The NPC's Inspector
+supplies the displayed name and portrait. The full Narrative template's `@speaker`,
+`@scene`, music, and other stage cues are not supported here; the player reports
+those tags rather than ignoring them. Ink variables are local to each conversation;
+they do not automatically read or change your adventure items/flags. Completion
+Flag is the small, explicit connection for this slice.
+
+Restyle `scenes/narrative/Conversation.tscn` to change the shared panel.
+The pinned Ink runtime and story loader come from the Narrative template;
+`addons/inkgd` is the engine, not a student editing surface. Its MIT license and
+upstream revision are included there.
 
 ## When you need a new behavior
 
@@ -104,9 +141,9 @@ Renaming room files or object nodes can invalidate old saves: start fresh after
 reorganizing your project. Custom moving objects need extra save code.
 
 On the web, saves belong to this browser and website. Clearing website data
-removes them. This slice does not include branching Ink dialogue, battles,
-audio, pause menus, automatic checkpoints, or an inventory grid. Inspect works
-for short NPC lines. Interaction uses distance, not line of sight; keep objects
+removes them. This slice includes branching Ink conversations. It does not include battles,
+audio, pause menus, automatic checkpoints, or an inventory grid. Inspect still
+works for short NPC lines. Interaction uses distance, not line of sight; keep objects
 away from the other side of thin walls.
 
 ## Playtest checklist

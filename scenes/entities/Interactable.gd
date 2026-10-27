@@ -1,6 +1,6 @@
 extends Node2D
 # Duplicate this scene, choose a Behavior, then fill in its Inspector fields.
-enum Behavior { INSPECT, PICKUP, SWITCH, DOOR, FINISH, CUSTOM }
+enum Behavior { INSPECT, PICKUP, SWITCH, DOOR, FINISH, CUSTOM, CONVERSATION }
 @export var display_name := "object"
 @export var behavior: Behavior = Behavior.INSPECT
 @export_multiline var message := "Put your clue here."
@@ -14,6 +14,12 @@ enum Behavior { INSPECT, PICKUP, SWITCH, DOOR, FINISH, CUSTOM }
 @export var flag_id := ""
 @export var once_only := false
 @export_file("*.tscn") var destination_room := ""
+@export_group("Conversation")
+## Export your Inky story to JSON and select it here.
+@export_file("*.json") var story_file := ""
+@export var conversation_portrait: Texture2D
+## Optional flag set after the last line is read and Return is clicked.
+@export var completion_flag := ""
 var object_id := ""
 
 func _ready() -> void:
@@ -30,10 +36,14 @@ func can_use() -> bool:
 	return (required_item == "" or required_item in Globals.items) and (required_flag == "" or required_flag in Globals.flags)
 
 func interact() -> void:
-	if Globals.finished or object_id in Globals.used_objects:
+	if Globals.finished or Globals.in_conversation or object_id in Globals.used_objects:
 		return
 	if not can_use():
 		SignalBus.message.emit(locked_message)
+		return
+	# Dialogue completes later. Do not hide the NPC or grant progress yet.
+	if behavior == Behavior.CONVERSATION:
+		SignalBus.conversation_requested.emit(self)
 		return
 	match behavior:
 		Behavior.INSPECT:

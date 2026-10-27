@@ -11,7 +11,7 @@ func _ready() -> void:
 
 func _physics_process(_delta: float) -> void:
 	velocity = Input.get_vector("move_left", "move_right", "move_up", "move_down") * move_speed
-	if Globals.finished:
+	if Globals.finished or Globals.in_conversation:
 		velocity = Vector2.ZERO
 	move_and_slide()
 	nearby = null
@@ -26,6 +26,6 @@ func _physics_process(_delta: float) -> void:
 	$Prompt.text = "E: " + nearby.display_name if nearby != null and not Globals.finished else ""
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed("interact") and not event.is_echo() and is_instance_valid(nearby):
+	if not Globals.in_conversation and event.is_action_pressed("interact") and not event.is_echo() and is_instance_valid(nearby):
 		nearby.interact()
 		get_viewport().set_input_as_handled()

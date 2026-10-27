@@ -4,3 +4,5 @@ signal message(text: String)
 signal state_changed
 signal room_requested(path: String)
 signal finished(text: String)
+
+signal conversation_requested(npc: Node)
