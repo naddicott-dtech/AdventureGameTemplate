@@ -1,0 +1,116 @@
+[gd_scene load_steps=9 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/entities/Player.tscn" id="1_ht22e"]
+[ext_resource type="Script" path="res://scenes/entities/Player.gd" id="2_5bhfs"]
+[ext_resource type="PackedScene" path="res://scenes/entities/Interactable.tscn" id="3_v3xuu"]
+[ext_resource type="Script" path="res://scenes/entities/Interactable.gd" id="4_j8heh"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_0vb4a"]
+size = Vector2(1240, 12)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_kk5s2"]
+size = Vector2(1240, 12)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_s8v2k"]
+size = Vector2(12, 450)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_xoa1y"]
+size = Vector2(12, 450)
+
+[node name="Room1" type="Node2D"]
+
+[node name="Floor" type="Polygon2D" parent="."]
+color = Color(0.2, 0.2, 0.2, 1)
+polygon = PackedVector2Array(20, 145, 1260, 145, 1260, 595, 20, 595)
+
+[node name="RoomLabel" type="Label" parent="."]
+offset_left = 45.0
+offset_top = 160.0
+offset_right = 845.0
+offset_bottom = 195.0
+theme_override_font_sizes/font_size = 20
+text = "ROOM 1 — replace this floor"
+
+[node name="Walls" type="Node2D" parent="."]
+
+[node name="Wall0" type="StaticBody2D" parent="Walls"]
+
+[node name="Art" type="Polygon2D" parent="Walls/Wall0"]
+color = Color(0.46666667, 0.46666667, 0.46666667, 1)
+polygon = PackedVector2Array(20, 145, 1260, 145, 1260, 157, 20, 157)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/Wall0"]
+position = Vector2(640, 151)
+shape = SubResource("RectangleShape2D_0vb4a")
+
+[node name="Wall1" type="StaticBody2D" parent="Walls"]
+
+[node name="Art" type="Polygon2D" parent="Walls/Wall1"]
+color = Color(0.46666667, 0.46666667, 0.46666667, 1)
+polygon = PackedVector2Array(20, 583, 1260, 583, 1260, 595, 20, 595)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/Wall1"]
+position = Vector2(640, 589)
+shape = SubResource("RectangleShape2D_kk5s2")
+
+[node name="Wall2" type="StaticBody2D" parent="Walls"]
+
+[node name="Art" type="Polygon2D" parent="Walls/Wall2"]
+color = Color(0.46666667, 0.46666667, 0.46666667, 1)
+polygon = PackedVector2Array(20, 145, 32, 145, 32, 595, 20, 595)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/Wall2"]
+position = Vector2(26, 370)
+shape = SubResource("RectangleShape2D_s8v2k")
+
+[node name="Wall3" type="StaticBody2D" parent="Walls"]
+
+[node name="Art" type="Polygon2D" parent="Walls/Wall3"]
+color = Color(0.46666667, 0.46666667, 0.46666667, 1)
+polygon = PackedVector2Array(1248, 145, 1260, 145, 1260, 595, 1248, 595)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/Wall3"]
+position = Vector2(1254, 370)
+shape = SubResource("RectangleShape2D_xoa1y")
+
+[node name="Entities" type="Node2D" parent="."]
+
+[node name="Player" type="CharacterBody2D" parent="Entities" instance=ExtResource("1_ht22e")]
+position = Vector2(150, 380)
+script = ExtResource("2_5bhfs")
+
+[node name="Sign" type="Node2D" parent="Entities" instance=ExtResource("3_v3xuu")]
+position = Vector2(320, 280)
+script = ExtResource("4_j8heh")
+display_name = "sign"
+message = "Find the brass key. Turn on power. The door needs both."
+
+[node name="Key" type="Node2D" parent="Entities" instance=ExtResource("3_v3xuu")]
+position = Vector2(520, 420)
+script = ExtResource("4_j8heh")
+display_name = "key"
+behavior = 1
+message = "You picked up the brass key."
+item_id = "brass_key"
+
+[node name="Switch" type="Node2D" parent="Entities" instance=ExtResource("3_v3xuu")]
+position = Vector2(780, 280)
+script = ExtResource("4_j8heh")
+display_name = "switch"
+behavior = 2
+message = "Power is on."
+flag_id = "power"
+
+[node name="Door" type="Node2D" parent="Entities" instance=ExtResource("3_v3xuu")]
+position = Vector2(1090, 420)
+script = ExtResource("4_j8heh")
+display_name = "door"
+behavior = 3
+message = "Welcome to room two. Try returning: your progress stays."
+required_item = "brass_key"
+required_flag = "power"
+locked_message = "This door needs the brass key AND power."
+destination_room = "res://scenes/levels/Room2.tscn"
+
+[node name="Spawn" type="Marker2D" parent="."]
+position = Vector2(150, 380)

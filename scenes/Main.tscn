@@ -1,0 +1,81 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scenes/managers/RoomManager.gd" id="1_rvslj"]
+[ext_resource type="Script" path="res://scenes/ui/HUD.gd" id="2_0bbpv"]
+
+[node name="Main" type="Node"]
+
+[node name="Managers" type="Node" parent="."]
+
+[node name="RoomManager" type="Node" parent="Managers" node_paths=PackedStringArray("world_root")]
+script = ExtResource("1_rvslj")
+world_root = NodePath("../../WorldRoot")
+
+[node name="WorldRoot" type="Node" parent="."]
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="HUD" type="Control" parent="UI" node_paths=PackedStringArray("room_manager")]
+layout_mode = 3
+anchors_preset = 0
+mouse_filter = 2
+script = ExtResource("2_0bbpv")
+room_manager = NodePath("../../Managers/RoomManager")
+
+[node name="Mission" type="Label" parent="UI/HUD"]
+layout_mode = 0
+offset_left = 30.0
+offset_top = 15.0
+offset_right = 1130.0
+offset_bottom = 45.0
+theme_override_font_sizes/font_size = 20
+
+[node name="Status" type="Label" parent="UI/HUD"]
+layout_mode = 0
+offset_left = 30.0
+offset_top = 55.0
+offset_right = 730.0
+offset_bottom = 85.0
+theme_override_font_sizes/font_size = 20
+
+[node name="Inventory" type="Label" parent="UI/HUD"]
+layout_mode = 0
+offset_left = 30.0
+offset_top = 92.0
+offset_right = 930.0
+offset_bottom = 122.0
+theme_override_font_sizes/font_size = 20
+
+[node name="Message" type="Label" parent="UI/HUD"]
+layout_mode = 0
+offset_left = 30.0
+offset_top = 620.0
+offset_right = 1230.0
+offset_bottom = 705.0
+theme_override_font_sizes/font_size = 20
+text = "Find the key and switch. Then try the door."
+autowrap_mode = 3
+
+[node name="Save" type="Button" parent="UI/HUD"]
+layout_mode = 0
+offset_left = 900.0
+offset_top = 60.0
+offset_right = 995.0
+offset_bottom = 100.0
+text = "Save"
+
+[node name="Load" type="Button" parent="UI/HUD"]
+layout_mode = 0
+offset_left = 1005.0
+offset_top = 60.0
+offset_right = 1100.0
+offset_bottom = 100.0
+text = "Load"
+
+[node name="Restart" type="Button" parent="UI/HUD"]
+layout_mode = 0
+offset_left = 1110.0
+offset_top = 60.0
+offset_right = 1205.0
+offset_bottom = 100.0
+text = "Restart"

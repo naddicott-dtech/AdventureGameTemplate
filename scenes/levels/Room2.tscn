@@ -1,0 +1,98 @@
+[gd_scene load_steps=9 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/entities/Player.tscn" id="1_8ha7l"]
+[ext_resource type="Script" path="res://scenes/entities/Player.gd" id="2_78ieo"]
+[ext_resource type="PackedScene" path="res://scenes/entities/Interactable.tscn" id="3_hdbk2"]
+[ext_resource type="Script" path="res://scenes/entities/Interactable.gd" id="4_80pqq"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ej6ro"]
+size = Vector2(1240, 12)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ie0sb"]
+size = Vector2(1240, 12)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_pj10c"]
+size = Vector2(12, 450)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_mkx3j"]
+size = Vector2(12, 450)
+
+[node name="Room2" type="Node2D"]
+
+[node name="Floor" type="Polygon2D" parent="."]
+color = Color(0.2, 0.2, 0.2, 1)
+polygon = PackedVector2Array(20, 145, 1260, 145, 1260, 595, 20, 595)
+
+[node name="RoomLabel" type="Label" parent="."]
+offset_left = 45.0
+offset_top = 160.0
+offset_right = 845.0
+offset_bottom = 195.0
+theme_override_font_sizes/font_size = 20
+text = "ROOM 2 — replace this floor"
+
+[node name="Walls" type="Node2D" parent="."]
+
+[node name="Wall0" type="StaticBody2D" parent="Walls"]
+
+[node name="Art" type="Polygon2D" parent="Walls/Wall0"]
+color = Color(0.46666667, 0.46666667, 0.46666667, 1)
+polygon = PackedVector2Array(20, 145, 1260, 145, 1260, 157, 20, 157)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/Wall0"]
+position = Vector2(640, 151)
+shape = SubResource("RectangleShape2D_ej6ro")
+
+[node name="Wall1" type="StaticBody2D" parent="Walls"]
+
+[node name="Art" type="Polygon2D" parent="Walls/Wall1"]
+color = Color(0.46666667, 0.46666667, 0.46666667, 1)
+polygon = PackedVector2Array(20, 583, 1260, 583, 1260, 595, 20, 595)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/Wall1"]
+position = Vector2(640, 589)
+shape = SubResource("RectangleShape2D_ie0sb")
+
+[node name="Wall2" type="StaticBody2D" parent="Walls"]
+
+[node name="Art" type="Polygon2D" parent="Walls/Wall2"]
+color = Color(0.46666667, 0.46666667, 0.46666667, 1)
+polygon = PackedVector2Array(20, 145, 32, 145, 32, 595, 20, 595)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/Wall2"]
+position = Vector2(26, 370)
+shape = SubResource("RectangleShape2D_pj10c")
+
+[node name="Wall3" type="StaticBody2D" parent="Walls"]
+
+[node name="Art" type="Polygon2D" parent="Walls/Wall3"]
+color = Color(0.46666667, 0.46666667, 0.46666667, 1)
+polygon = PackedVector2Array(1248, 145, 1260, 145, 1260, 595, 1248, 595)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/Wall3"]
+position = Vector2(1254, 370)
+shape = SubResource("RectangleShape2D_mkx3j")
+
+[node name="Entities" type="Node2D" parent="."]
+
+[node name="Player" type="CharacterBody2D" parent="Entities" instance=ExtResource("1_8ha7l")]
+position = Vector2(150, 380)
+script = ExtResource("2_78ieo")
+
+[node name="Return" type="Node2D" parent="Entities" instance=ExtResource("3_hdbk2")]
+position = Vector2(350, 300)
+script = ExtResource("4_80pqq")
+display_name = "return door"
+behavior = 3
+message = "Back in room one."
+destination_room = "res://scenes/levels/Room1.tscn"
+
+[node name="Exit" type="Node2D" parent="Entities" instance=ExtResource("3_hdbk2")]
+position = Vector2(950, 420)
+script = ExtResource("4_80pqq")
+display_name = "exit"
+behavior = 4
+message = "You escaped! Now make a better adventure. Restart to play again."
+
+[node name="Spawn" type="Marker2D" parent="."]
+position = Vector2(150, 380)
